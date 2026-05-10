@@ -1,0 +1,5 @@
+Sword 15
+Shield 10
+Health_Potion 30
+Magic_Staff 20
+Iron_Boots 8

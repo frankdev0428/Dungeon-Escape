@@ -6,18 +6,19 @@
 #include "Room.h"
 #include "Map.h"
 #include "Item.h"
+#include "ItemLoader.h"
 
 int main() {
-    // ---- Item test ----
-    Item defaultItem;                        // default constructor
-    Item sword("Sword",        15);          // parameterized constructor
-    Item potion("Health Potion", 30);
+    // ---- File loading test ----
+    // Load all items from items.txt into a vector
+    std::vector<Item> items = loadItemsFromFile("items.txt");
 
-    std::cout << "--- Item Test ---\n";
-    defaultItem.displayItem(); // [Item] Nothing (value: 0)
-    sword.displayItem();       // [Item] Sword (value: 15)
-    potion.displayItem();      // [Item] Health Potion (value: 30)
-    std::cout << "-----------------\n\n";
+    std::cout << "--- Loaded Items ---\n";
+    // Loop through the vector and display each item
+    for (int i = 0; i < items.size(); i++) {
+        items[i].displayItem();
+    }
+    std::cout << "--------------------\n\n";
 
     // Seed random so the map layout differs each run
     srand(time(0));
