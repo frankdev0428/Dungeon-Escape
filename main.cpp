@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Player.h"
+#include "Room.h"
 
 const int GRID_SIZE = 5;
 
@@ -23,6 +24,20 @@ void displayGrid(const Player& player) {
 }
 
 int main() {
+    // ---- Room type test ----
+    // Create one room of each type and print its info
+    Room r1;                   // default → EMPTY
+    Room r2;
+    r2.setType(ENEMY);
+    Room r3;
+    r3.setType(ITEM);
+
+    std::cout << "--- Room Test ---\n";
+    r1.displayRoomInfo(); // should print: Empty room
+    r2.displayRoomInfo(); // should print: Enemy room
+    r3.displayRoomInfo(); // should print: Item room
+    std::cout << "-----------------\n\n";
+
     Player player; // create player — starts at (0, 0)
 
     std::cout << "=== Dungeon Escape ===\n";
