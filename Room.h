@@ -18,8 +18,15 @@ public:
 
     void displayRoomInfo() const; // print what kind of room this is
 
+    bool isVisited() const;       // returns whether the room has been entered
+    void setVisited(bool v);      // manually mark the room as visited/unvisited
+
+    // Triggers the room event on first entry; does nothing on repeat visits
+    void triggerEvent();
+
 private:
-    RoomType type; // the room's current type
+    RoomType type;   // the room's current type
+    bool visited;    // true once the player has entered this room
 };
 
 #endif

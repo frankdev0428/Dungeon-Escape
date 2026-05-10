@@ -7,22 +7,21 @@
 #include "Map.h"
 
 int main() {
-    // Seed random so the map is different each run
+    // Seed random so the map layout is different each run
     srand(time(0));
 
-    // ---- Room type test ----
+    // ---- Room test ----
     Room r1;
     Room r2; r2.setType(ENEMY);
     Room r3; r3.setType(ITEM);
 
     std::cout << "--- Room Test ---\n";
-    r1.displayRoomInfo(); // Empty room
-    r2.displayRoomInfo(); // Enemy room
-    r3.displayRoomInfo(); // Item room
+    r1.displayRoomInfo();
+    r2.displayRoomInfo();
+    r3.displayRoomInfo();
     std::cout << "-----------------\n\n";
 
     // ---- Map test ----
-    // Build the map and check a few rooms by position
     Map map;
     Player player; // starts at (0, 0)
 
@@ -30,23 +29,23 @@ int main() {
     std::cout << "Room at (0,0): "; map.getRoom(0, 0).displayRoomInfo();
     std::cout << "Room at (2,2): "; map.getRoom(2, 2).displayRoomInfo();
     std::cout << "Room at (4,4): "; map.getRoom(4, 4).displayRoomInfo();
-    std::cout << "----------------\n";
+    std::cout << "----------------\n\n";
+
+    // Trigger the starting room's event immediately (player spawns here)
+    map.getRoom(player.x, player.y).triggerEvent();
 
     // ---- Game loop ----
     std::cout << "=== Dungeon Escape ===\n";
     std::cout << "Move with W/S/A/D. Q to quit.\n";
 
     while (true) {
-        map.displayMap(player); // draw the grid with player position
+        map.displayMap(player);
 
-        std::cout << "Position: (" << player.x << ", " << player.y << ")  ";
-        std::cout << "Current room: ";
-        map.getRoom(player.x, player.y).displayRoomInfo();
-
+        std::cout << "Position: (" << player.x << ", " << player.y << ")\n";
         std::cout << "Enter move: ";
+
         std::string input;
         std::cin >> input;
-
         char command = toupper(input[0]);
 
         if      (command == 'W') player.moveNorth();
@@ -58,7 +57,12 @@ int main() {
             break;
         } else {
             std::cout << "Unknown command. Use W/A/S/D to move, Q to quit.\n";
+            continue; // skip triggerEvent on invalid input
         }
+
+        // After every valid move, fire the new room's event.
+        // triggerEvent() does nothing if the room was already visited.
+        map.getRoom(player.x, player.y).triggerEvent();
     }
 
     return 0;
