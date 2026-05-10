@@ -7,18 +7,43 @@
 #include "Map.h"
 #include "Item.h"
 #include "ItemLoader.h"
+#include "HashTable.h"
 
 int main() {
-    // ---- File loading test ----
-    // Load all items from items.txt into a vector
+    // ---- Load items from file ----
     std::vector<Item> items = loadItemsFromFile("items.txt");
 
     std::cout << "--- Loaded Items ---\n";
-    // Loop through the vector and display each item
     for (int i = 0; i < items.size(); i++) {
         items[i].displayItem();
     }
     std::cout << "--------------------\n\n";
+
+    // ---- Hash table test ----
+    HashTable ht(10); // create a table with 10 buckets
+
+    // Insert every loaded item into the hash table
+    for (int i = 0; i < items.size(); i++) {
+        ht.insert(items[i]);
+    }
+
+    // Show how items are distributed across buckets
+    std::cout << "--- Hash Table ---\n";
+    ht.display();
+    std::cout << "------------------\n\n";
+
+    // Search for items that exist and one that does not
+    std::cout << "--- Search Test ---\n";
+    std::string queries[] = { "Sword", "Iron_Boots", "Axe" };
+    for (int i = 0; i < 3; i++) {
+        Item* found = ht.search(queries[i]);
+        if (found != nullptr) {
+            std::cout << "Found: "; found->displayItem();
+        } else {
+            std::cout << "\"" << queries[i] << "\" not found in table.\n";
+        }
+    }
+    std::cout << "-------------------\n\n";
 
     // Seed random so the map layout differs each run
     srand(time(0));
