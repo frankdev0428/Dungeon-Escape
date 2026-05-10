@@ -35,7 +35,7 @@ void Map::displayMap(const Player& player) const {
     std::cout << "\n";
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
-            if (row == player.y && col == player.x) {
+            if (row == player.getY() && col == player.getX()) {
                 std::cout << "P "; // player is here
             } else {
                 std::cout << ". "; // unexplored cell
