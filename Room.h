@@ -1,6 +1,9 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include <vector>
+#include "Item.h"
+
 // The three possible types a room can be
 enum RoomType {
     EMPTY,
@@ -21,8 +24,9 @@ public:
     bool isVisited() const;       // returns whether the room has been entered
     void setVisited(bool v);      // manually mark the room as visited/unvisited
 
-    // Triggers the room event on first entry; does nothing on repeat visits
-    void triggerEvent();
+    // Triggers the room event on first entry; does nothing on repeat visits.
+    // items is passed in so ITEM rooms can pick a random one to display.
+    void triggerEvent(const std::vector<Item>& items);
 
 private:
     RoomType type;   // the room's current type

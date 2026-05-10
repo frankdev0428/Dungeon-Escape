@@ -52,7 +52,7 @@ int main() {
     Player player; // starts at (0, 0)
 
     // Trigger the starting room immediately — player spawns here
-    map.getRoom(player.getX(), player.getY()).triggerEvent();
+    map.getRoom(player.getX(), player.getY()).triggerEvent(items);
 
     std::cout << "=== Dungeon Escape ===\n";
     std::cout << "Move with W/S/A/D. Q to quit.\n";
@@ -82,9 +82,9 @@ int main() {
         }
 
         // Get the room the player just entered and fire its event.
-        // triggerEvent() does nothing if this room was already visited.
+        // triggerEvent(items) does nothing if this room was already visited.
         Room& currentRoom = map.getRoom(player.getX(), player.getY());
-        currentRoom.triggerEvent();
+        currentRoom.triggerEvent(items);
     }
 
     return 0;

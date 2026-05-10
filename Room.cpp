@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib> // rand()
 #include "Room.h"
 
 // Start every room as empty and unvisited
@@ -25,18 +26,25 @@ void Room::setVisited(bool v) {
 
 // Fire the room event the first time the player steps in.
 // On repeat visits nothing happens — the room is already "spent".
-void Room::triggerEvent() {
+void Room::triggerEvent(const std::vector<Item>& items) {
     if (visited) {
         return; // already seen this room, skip
     }
 
-    // Print a message based on what kind of room this is
     if (type == EMPTY) {
         std::cout << "This room is empty.\n";
     } else if (type == ENEMY) {
         std::cout << "An enemy appears!\n";
     } else if (type == ITEM) {
-        std::cout << "You found an item!\n";
+        if (!items.empty()) {
+            // Pick a random item from the list and display it
+            int index = rand() % items.size();
+            const Item& found = items[index];
+            std::cout << "You found: " << found.getName()
+                      << " (Value: " << found.getValue() << ")\n";
+        } else {
+            std::cout << "The room is empty — no items left.\n";
+        }
     }
 
     visited = true; // mark so the event won't fire again
