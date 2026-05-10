@@ -1,74 +1,61 @@
 #include <iostream>
 #include <string>
+#include <cstdlib> // srand()
+#include <ctime>   // time()
 #include "Player.h"
 #include "Room.h"
-
-const int GRID_SIZE = 5;
-
-// Draw the 5x5 grid in the console.
-// The outer loop goes row by row (y), the inner loop goes column by column (x).
-// When the cell matches the player's position, print "P"; otherwise print ".".
-void displayGrid(const Player& player) {
-    std::cout << "\n";
-    for (int row = 0; row < GRID_SIZE; row++) {
-        for (int col = 0; col < GRID_SIZE; col++) {
-            if (row == player.y && col == player.x) {
-                std::cout << "P "; // player's current position
-            } else {
-                std::cout << ". "; // empty cell
-            }
-        }
-        std::cout << "\n"; // end of this row
-    }
-    std::cout << "\n";
-}
+#include "Map.h"
 
 int main() {
+    // Seed random so the map is different each run
+    srand(time(0));
+
     // ---- Room type test ----
-    // Create one room of each type and print its info
-    Room r1;                   // default → EMPTY
-    Room r2;
-    r2.setType(ENEMY);
-    Room r3;
-    r3.setType(ITEM);
+    Room r1;
+    Room r2; r2.setType(ENEMY);
+    Room r3; r3.setType(ITEM);
 
     std::cout << "--- Room Test ---\n";
-    r1.displayRoomInfo(); // should print: Empty room
-    r2.displayRoomInfo(); // should print: Enemy room
-    r3.displayRoomInfo(); // should print: Item room
+    r1.displayRoomInfo(); // Empty room
+    r2.displayRoomInfo(); // Enemy room
+    r3.displayRoomInfo(); // Item room
     std::cout << "-----------------\n\n";
 
-    Player player; // create player — starts at (0, 0)
+    // ---- Map test ----
+    // Build the map and check a few rooms by position
+    Map map;
+    Player player; // starts at (0, 0)
 
-    std::cout << "=== Dungeon Escape ===\n";
-    std::cout << "Move with W (north) / S (south) / A (west) / D (east)\n";
-    std::cout << "Type Q to quit.\n";
+    std::cout << "--- Map Test ---\n";
+    std::cout << "Room at (0,0): "; map.getRoom(0, 0).displayRoomInfo();
+    std::cout << "Room at (2,2): "; map.getRoom(2, 2).displayRoomInfo();
+    std::cout << "Room at (4,4): "; map.getRoom(4, 4).displayRoomInfo();
+    std::cout << "----------------\n";
 
     // ---- Game loop ----
-    // Runs forever until the player types Q
+    std::cout << "=== Dungeon Escape ===\n";
+    std::cout << "Move with W/S/A/D. Q to quit.\n";
+
     while (true) {
-        displayGrid(player);
+        map.displayMap(player); // draw the grid with player position
 
-        std::cout << "Position: (" << player.x << ", " << player.y << ")\n";
+        std::cout << "Position: (" << player.x << ", " << player.y << ")  ";
+        std::cout << "Current room: ";
+        map.getRoom(player.x, player.y).displayRoomInfo();
+
         std::cout << "Enter move: ";
-
         std::string input;
         std::cin >> input;
 
-        // Convert first character to uppercase so 'w' and 'W' both work
         char command = toupper(input[0]);
 
-        if (command == 'W') {
-            player.moveNorth();
-        } else if (command == 'S') {
-            player.moveSouth();
-        } else if (command == 'A') {
-            player.moveWest();
-        } else if (command == 'D') {
-            player.moveEast();
-        } else if (command == 'Q') {
+        if      (command == 'W') player.moveNorth();
+        else if (command == 'S') player.moveSouth();
+        else if (command == 'A') player.moveWest();
+        else if (command == 'D') player.moveEast();
+        else if (command == 'Q') {
             std::cout << "Thanks for playing. Goodbye!\n";
-            break; // exit the game loop
+            break;
         } else {
             std::cout << "Unknown command. Use W/A/S/D to move, Q to quit.\n";
         }
