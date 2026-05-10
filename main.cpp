@@ -5,8 +5,20 @@
 #include "Player.h"
 #include "Room.h"
 #include "Map.h"
+#include "Item.h"
 
 int main() {
+    // ---- Item test ----
+    Item defaultItem;                        // default constructor
+    Item sword("Sword",        15);          // parameterized constructor
+    Item potion("Health Potion", 30);
+
+    std::cout << "--- Item Test ---\n";
+    defaultItem.displayItem(); // [Item] Nothing (value: 0)
+    sword.displayItem();       // [Item] Sword (value: 15)
+    potion.displayItem();      // [Item] Health Potion (value: 30)
+    std::cout << "-----------------\n\n";
+
     // Seed random so the map layout differs each run
     srand(time(0));
 
