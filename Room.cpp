@@ -34,7 +34,17 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory)
     if (type == EMPTY) {
         std::cout << "This room is empty.\n";
     } else if (type == ENEMY) {
+        // Pick one of three enemy types at random
+        int roll = rand() % 3;
+        Enemy enemy("Unknown", 0, 0); // placeholder, overwritten below
+
+        if (roll == 0) enemy = Enemy("Goblin",   20, 5);
+        else if (roll == 1) enemy = Enemy("Orc",  30, 8);
+        else                enemy = Enemy("Skeleton", 15, 4);
+
         std::cout << "An enemy appears!\n";
+        enemy.displayEnemy(); // show name, HP, ATK
+
     } else if (type == ITEM) {
         if (!items.empty()) {
             // Pick a random item from the pool and show it
