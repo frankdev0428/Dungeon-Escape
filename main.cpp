@@ -74,6 +74,17 @@ int main() {
         else if (command == 'D') player.moveEast();
 
         map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory);
+
+        // Win condition — player reached the exit at (4,4)
+        if (player.getX() == 4 && player.getY() == 4) {
+            int steps = findShortestPath(player.getX(), player.getY());
+            printHUD(player, steps);
+            printMap(map, player);
+            std::cout << "==============================\n";
+            std::cout << "   You escaped the dungeon!   \n";
+            std::cout << "==============================\n\n";
+            break;
+        }
     }
 
     return 0;
