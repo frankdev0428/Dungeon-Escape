@@ -59,8 +59,11 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
             std::cout << "  1. Attack   2. Run\n";
             std::cout << "  > ";
 
-            int choice;
-            std::cin >> choice;
+            // Read as string so non-integer input never breaks cin
+            std::string input;
+            std::cin >> input;
+            int choice = 0;
+            if (!input.empty()) choice = input[0] - '0'; // '1'->1, '2'->2, else 0
 
             if (choice == 1) {
                 // Player attacks using their current attack stat
@@ -89,10 +92,11 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
                           << " You lose " << dmg << " HP."
                           << " Your HP: " << player.getHealth() << "\n";
 
-            } else {
-                // Player chose to run — exit combat immediately
+            } else if (choice == 2) {
                 std::cout << "  You fled from the " << enemy.getName() << "!\n";
                 break;
+            } else {
+                std::cout << "  Invalid input. Enter 1 to Attack or 2 to Run.\n";
             }
         }
 
