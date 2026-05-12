@@ -9,8 +9,28 @@
 #include "ItemLoader.h"
 #include "HashTable.h"
 #include "InventoryBST.h"
+#include "Enemy.h"
 
 int main() {
+    // ---- Enemy test ----
+    Enemy goblin("Goblin", 30, 5);
+    Enemy troll("Troll",   80, 12);
+
+    std::cout << "--- Enemy Test ---\n";
+    goblin.displayEnemy();
+    troll.displayEnemy();
+
+    // Simulate taking damage
+    goblin.takeDamage(10);
+    std::cout << "Goblin takes 10 damage:\n";
+    goblin.displayEnemy();
+    std::cout << "Goblin alive? " << (goblin.isAlive() ? "Yes" : "No") << "\n";
+
+    goblin.takeDamage(999); // overkill — health should clamp to 0
+    std::cout << "Goblin takes 999 damage:\n";
+    goblin.displayEnemy();
+    std::cout << "Goblin alive? " << (goblin.isAlive() ? "Yes" : "No") << "\n";
+    std::cout << "------------------\n\n";
     // ---- Load items from file ----
     std::vector<Item> items = loadItemsFromFile("items.txt");
 
