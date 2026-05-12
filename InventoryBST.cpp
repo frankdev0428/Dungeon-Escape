@@ -22,8 +22,6 @@ Node* InventoryBST::insert(Node* node, const Item& item) {
         newNode->data  = item;
         newNode->left  = nullptr;
         newNode->right = nullptr;
-        std::cout << "Inserted: " << item.getName()
-                  << " (value: " << item.getValue() << ")\n";
         return newNode;
     }
 
