@@ -6,9 +6,10 @@ public:
     // Constructor: start at top-left corner (0, 0)
     Player();
 
-    // Getters — the only way to read position from outside the class
-    int getX() const;
-    int getY() const;
+    // Getters
+    int getX()      const;
+    int getY()      const;
+    int getHealth() const;
 
     // Directly set position — used by the undo system to restore a saved spot
     void setPosition(int newX, int newY);
@@ -20,8 +21,9 @@ public:
     void moveEast();  // right (increase x)
 
 private:
-    int x; // column (left-right), 0 = leftmost
-    int y; // row    (up-down),    0 = top
+    int x;
+    int y;
+    int health; // starts at 100
 };
 
 #endif

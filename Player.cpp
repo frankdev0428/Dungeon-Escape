@@ -3,12 +3,14 @@
 const int GRID_SIZE = 5; // valid positions are 0..4
 
 Player::Player() {
-    x = 0;
-    y = 0;
+    x      = 0;
+    y      = 0;
+    health = 100;
 }
 
-int Player::getX() const { return x; }
-int Player::getY() const { return y; }
+int Player::getX()      const { return x;      }
+int Player::getY()      const { return y;      }
+int Player::getHealth() const { return health; }
 
 void Player::setPosition(int newX, int newY) {
     x = newX;

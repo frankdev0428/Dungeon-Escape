@@ -13,6 +13,7 @@
 #include "Sorter.h"
 #include "Pathfinder.h"
 #include "Stack.h"
+#include "UI.h"
 
 int main() {
     // ---- Dijkstra test ----
@@ -126,18 +127,15 @@ int main() {
     // Trigger the starting room (inventory passed so ITEM rooms can insert)
     map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory);
 
-    std::cout << "=== Dungeon Escape ===\n";
-    std::cout << "W/S/A/D = move  |  U = undo  |  I = inventory  |  Q = quit\n";
+    printTitle();
 
     while (true) {
-        map.displayMap(player);
-
-        std::cout << "Position: (" << player.getX() << ", " << player.getY() << ")\n";
-
         int steps = findShortestPath(player.getX(), player.getY());
-        std::cout << "Shortest path to exit: " << steps << " steps\n";
+        printHUD(player, steps);
+        printMap(map, player);
+        printMenu();
 
-        std::cout << "Enter command: ";
+        std::cout << "  > ";
 
         std::string input;
         std::cin >> input;
