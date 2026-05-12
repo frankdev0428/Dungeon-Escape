@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Item.h"
+#include "InventoryBST.h"
 
 // The three possible types a room can be
 enum RoomType {
@@ -26,7 +27,9 @@ public:
 
     // Triggers the room event on first entry; does nothing on repeat visits.
     // items is passed in so ITEM rooms can pick a random one to display.
-    void triggerEvent(const std::vector<Item>& items);
+    // items   = pool to pick from
+    // inventory = BST to insert the picked item into
+    void triggerEvent(const std::vector<Item>& items, InventoryBST& inventory);
 
 private:
     RoomType type;   // the room's current type

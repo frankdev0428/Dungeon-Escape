@@ -26,7 +26,7 @@ void Room::setVisited(bool v) {
 
 // Fire the room event the first time the player steps in.
 // On repeat visits nothing happens — the room is already "spent".
-void Room::triggerEvent(const std::vector<Item>& items) {
+void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory) {
     if (visited) {
         return; // already seen this room, skip
     }
@@ -37,11 +37,13 @@ void Room::triggerEvent(const std::vector<Item>& items) {
         std::cout << "An enemy appears!\n";
     } else if (type == ITEM) {
         if (!items.empty()) {
-            // Pick a random item from the list and display it
+            // Pick a random item from the pool and show it
             int index = rand() % items.size();
             const Item& found = items[index];
             std::cout << "You found: " << found.getName()
                       << " (Value: " << found.getValue() << ")\n";
+            // Add it to the player's inventory BST (visited flag ensures once only)
+            inventory.insertItem(found);
         } else {
             std::cout << "The room is empty — no items left.\n";
         }
