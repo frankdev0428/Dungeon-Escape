@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "InventoryBST.h"
 #include "Enemy.h"
+#include "Queue.h"
 
 // The three possible types a room can be
 enum RoomType {

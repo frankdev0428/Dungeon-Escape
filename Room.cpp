@@ -43,7 +43,28 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory)
         else                enemy = Enemy("Skeleton", 15, 4);
 
         std::cout << "An enemy appears!\n";
-        enemy.displayEnemy(); // show name, HP, ATK
+        enemy.displayEnemy();
+
+        // ---- Turn queue (FIFO) ----
+        // Push both combatants in order — Player always goes first
+        Queue turnQueue;
+        turnQueue.push("Player");
+        turnQueue.push("Enemy");
+
+        // Process each turn: read the front, print the action, remove it
+        // FIFO guarantees Player → Enemy order every time
+        std::cout << "--- Turn Order ---\n";
+        while (!turnQueue.isEmpty()) {
+            std::string turn = turnQueue.front(); // peek at who goes next
+            turnQueue.pop();                      // remove them from the queue
+
+            if (turn == "Player") {
+                std::cout << "Player attacks!\n";
+            } else {
+                std::cout << enemy.getName() << " attacks!\n";
+            }
+        }
+        std::cout << "------------------\n";
 
     } else if (type == ITEM) {
         if (!items.empty()) {
