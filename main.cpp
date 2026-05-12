@@ -14,6 +14,33 @@
 #include "Pathfinder.h"
 
 int main() {
+    // ---- Dijkstra test ----
+    // On an open 5x5 grid, shortest path = Manhattan distance: |4-x| + |4-y|
+    // Test several positions and confirm Dijkstra matches the formula.
+    struct TestCase { int x, y, expected; };
+    TestCase tests[] = {
+        {0, 0, 8}, // corners
+        {4, 0, 4},
+        {0, 4, 4},
+        {4, 4, 0}, // already at exit
+        {2, 2, 4}, // center
+        {3, 3, 2}, // one step away
+        {1, 3, 4}  // mid-grid
+    };
+
+    std::cout << "--- Dijkstra Test ---\n";
+    bool allPassed = true;
+    for (int i = 0; i < 7; i++) {
+        int result = findShortestPath(tests[i].x, tests[i].y);
+        bool passed = (result == tests[i].expected);
+        if (!passed) allPassed = false;
+        std::cout << "(" << tests[i].x << "," << tests[i].y << ") → "
+                  << result << " steps  [expected " << tests[i].expected << "]  "
+                  << (passed ? "PASS" : "FAIL") << "\n";
+    }
+    std::cout << (allPassed ? "All tests passed!\n" : "Some tests FAILED.\n");
+    std::cout << "---------------------\n\n";
+
     // ---- Sort test ----
     // Create a vector with items in a random order
     std::vector<Item> sortTest;
