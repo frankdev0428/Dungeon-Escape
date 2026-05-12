@@ -10,8 +10,32 @@
 #include "HashTable.h"
 #include "InventoryBST.h"
 #include "Enemy.h"
+#include "Sorter.h"
 
 int main() {
+    // ---- Sort test ----
+    // Create a vector with items in a random order
+    std::vector<Item> sortTest;
+    sortTest.push_back(Item("Magic_Staff",   20));
+    sortTest.push_back(Item("Iron_Boots",     8));
+    sortTest.push_back(Item("Health_Potion", 30));
+    sortTest.push_back(Item("Sword",         15));
+    sortTest.push_back(Item("Shield",        10));
+
+    std::cout << "--- Before Sort ---\n";
+    for (int i = 0; i < sortTest.size(); i++) {
+        std::cout << sortTest[i].getName()
+                  << " (Value: " << sortTest[i].getValue() << ")\n";
+    }
+
+    sortItems(sortTest); // run merge sort
+
+    std::cout << "--- After Sort (ascending) ---\n";
+    for (int i = 0; i < sortTest.size(); i++) {
+        std::cout << sortTest[i].getName()
+                  << " (Value: " << sortTest[i].getValue() << ")\n";
+    }
+    std::cout << "\n";
     // ---- Enemy test ----
     Enemy goblin("Goblin", 30, 5);
     Enemy troll("Troll",   80, 12);
