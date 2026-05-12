@@ -33,7 +33,7 @@ int main() {
     printTitle();
 
     // Trigger the starting room so the player sees an event on the first turn
-    map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory);
+    map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
 
     while (true) {
         int steps = findShortestPath(player.getX(), player.getY());
@@ -73,7 +73,18 @@ int main() {
         else if (command == 'A') player.moveWest();
         else if (command == 'D') player.moveEast();
 
-        map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory);
+        map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
+
+        // Game over — player ran out of health
+        if (player.getHealth() <= 0) {
+            printHUD(player, findShortestPath(player.getX(), player.getY()));
+            printMap(map, player);
+            std::cout << "==============================\n";
+            std::cout << "        GAME  OVER            \n";
+            std::cout << "  You were defeated...        \n";
+            std::cout << "==============================\n\n";
+            break;
+        }
 
         // Win condition — player reached the exit at (4,4)
         if (player.getX() == 4 && player.getY() == 4) {

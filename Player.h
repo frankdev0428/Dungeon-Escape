@@ -11,8 +11,8 @@ public:
     int getY()      const;
     int getHealth() const;
 
-    // Directly set position — used by the undo system to restore a saved spot
-    void setPosition(int newX, int newY);
+    void setPosition(int newX, int newY); // used by undo to restore position
+    void takeDamage(int dmg);             // reduce health; clamps at 0
 
     // Movement — each checks bounds before moving
     void moveNorth(); // up    (decrease y)

@@ -6,6 +6,7 @@
 #include "InventoryBST.h"
 #include "Enemy.h"
 #include "Queue.h"
+#include "Player.h"
 
 // The three possible types a room can be
 enum RoomType {
@@ -31,7 +32,7 @@ public:
     // items is passed in so ITEM rooms can pick a random one to display.
     // items   = pool to pick from
     // inventory = BST to insert the picked item into
-    void triggerEvent(const std::vector<Item>& items, InventoryBST& inventory);
+    void triggerEvent(const std::vector<Item>& items, InventoryBST& inventory, Player& player);
 
 private:
     RoomType type;   // the room's current type

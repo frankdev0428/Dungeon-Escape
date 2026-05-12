@@ -28,7 +28,7 @@ void Room::setVisited(bool v) {
 
 // Fire the room event the first time the player steps in.
 // On repeat visits nothing happens — the room is already "spent".
-void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory) {
+void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory, Player& player) {
     if (visited) {
         return; // already seen this room, skip
     }
@@ -60,7 +60,12 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory)
             if (current.second == "Player") {
                 std::cout << "   You attack first!\n";
             } else {
-                std::cout << "   " << enemy.getName() << " attacks back!\n";
+                // Enemy deals damage to the player
+                int dmg = enemy.getAttack();
+                player.takeDamage(dmg);
+                std::cout << "   " << enemy.getName() << " attacks! "
+                          << "You lose " << dmg << " HP."
+                          << " (HP remaining: " << player.getHealth() << ")\n";
             }
         }
         std::cout << "----------------\n";

@@ -17,6 +17,11 @@ void Player::setPosition(int newX, int newY) {
     y = newY;
 }
 
+void Player::takeDamage(int dmg) {
+    health -= dmg;
+    if (health < 0) health = 0;
+}
+
 void Player::moveNorth() {
     if (y > 0) y--;
 }
