@@ -74,8 +74,12 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
                     break; // enemy is dead — exit combat
                 }
 
-                // Enemy counter-attacks
+                // Enemy counter-attacks — 20% chance of dealing double damage
                 int dmg = enemy.getAttack();
+                if (rand() % 5 == 0) {          // 1-in-5 = 20%
+                    dmg *= 2;
+                    std::cout << "  ** Critical hit! **\n";
+                }
                 player.takeDamage(dmg);
                 std::cout << "  " << enemy.getName() << " attacks!"
                           << " You lose " << dmg << " HP."
@@ -101,6 +105,13 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
                       << " (Value: " << found.getValue() << ")"
                       << " -- added to inventory.\n";
             inventory.insertItem(found);
+
+            // 20% chance to also restore 20 HP
+            if (rand() % 5 == 0) {
+                player.heal(20);
+                std::cout << ">> Lucky find! You feel restored. +20 HP"
+                          << " (HP: " << player.getHealth() << ")\n";
+            }
         } else {
             std::cout << ">> This room once had an item, but it is gone.\n";
         }

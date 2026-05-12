@@ -22,6 +22,11 @@ void Player::takeDamage(int dmg) {
     if (health < 0) health = 0;
 }
 
+void Player::heal(int amount) {
+    health += amount;
+    if (health > 100) health = 100;
+}
+
 void Player::moveNorth() {
     if (y > 0) y--;
 }

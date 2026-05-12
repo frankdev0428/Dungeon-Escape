@@ -13,6 +13,7 @@ public:
 
     void setPosition(int newX, int newY); // used by undo to restore position
     void takeDamage(int dmg);             // reduce health; clamps at 0
+    void heal(int amount);                // restore health; caps at 100
 
     // Movement — each checks bounds before moving
     void moveNorth(); // up    (decrease y)
