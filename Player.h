@@ -3,8 +3,8 @@
 
 class Player {
 public:
-    // Constructor: start at top-left corner (0, 0)
-    Player();
+    // Constructor: start at (0,0); gridSize sets the movement boundary
+    Player(int gridRows, int gridCols);
 
     // Getters
     int getX()      const;
@@ -26,8 +26,10 @@ public:
 private:
     int x;
     int y;
-    int health; // starts at 100
-    int attack; // starts at 10, grows when enemies are defeated
+    int health;
+    int attack;
+    int maxRows; // boundary for north/south movement
+    int maxCols; // boundary for east/west movement
 };
 
 #endif

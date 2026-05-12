@@ -25,8 +25,11 @@ int main() {
         ht.insert(items[i]);
     }
 
-    Map map;
-    Player player;
+    const int MAP_ROWS = 5; // change here to resize the whole dungeon
+    const int MAP_COLS = 5;
+
+    Map map(MAP_ROWS, MAP_COLS);
+    Player player(MAP_ROWS, MAP_COLS);
     InventoryBST inventory;
     Stack moveStack;
 
@@ -36,7 +39,7 @@ int main() {
     map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
 
     while (true) {
-        int steps = findShortestPath(player.getX(), player.getY());
+        int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols());
         printHUD(player, steps);
         printMap(map, player);
         printMenu();
@@ -77,7 +80,7 @@ int main() {
 
         // Game over — player ran out of health
         if (player.getHealth() <= 0) {
-            printHUD(player, findShortestPath(player.getX(), player.getY()));
+            printHUD(player, findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols()));
             printMap(map, player);
             std::cout << "==============================\n";
             std::cout << "        GAME  OVER            \n";
@@ -87,8 +90,8 @@ int main() {
         }
 
         // Win condition — player reached the exit at (4,4)
-        if (player.getX() == 4 && player.getY() == 4) {
-            int steps = findShortestPath(player.getX(), player.getY());
+        if (player.getX() == map.getCols() - 1 && player.getY() == map.getRows() - 1) {
+            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols());
             printHUD(player, steps);
             printMap(map, player);
             std::cout << "==============================\n";

@@ -21,19 +21,18 @@ void printHUD(const Player& player, int stepsToExit) {
     std::cout << THIN << "\n";
 }
 
-// Map: draws the 5x5 grid — P = player, E = exit, . = empty cell
+// Map: draws the grid — P = player, E = exit (bottom-right), . = empty cell
 void printMap(const Map& map, const Player& player) {
-    const int GRID   = 5;
-    const int EXIT_X = 4;
-    const int EXIT_Y = 4;
+    const int EXIT_X = map.getCols() - 1;
+    const int EXIT_Y = map.getRows() - 1;
     std::cout << "\n";
-    for (int row = 0; row < GRID; row++) {
+    for (int row = 0; row < map.getRows(); row++) {
         std::cout << "  ";
-        for (int col = 0; col < GRID; col++) {
+        for (int col = 0; col < map.getCols(); col++) {
             if (row == player.getY() && col == player.getX()) {
                 std::cout << "P ";
             } else if (row == EXIT_Y && col == EXIT_X) {
-                std::cout << "E "; // exit tile — always visible
+                std::cout << "E ";
             } else {
                 std::cout << ". ";
             }

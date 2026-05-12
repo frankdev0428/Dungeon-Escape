@@ -7,13 +7,13 @@
 
 class Map {
 public:
-    // Constructor: builds and randomly fills the 5x5 grid
-    Map();
+    // Constructor: builds and randomly fills an r x c grid
+    Map(int r, int c);
 
-    // Returns a reference to the room at column x, row y
+    int getRows() const;
+    int getCols() const;
+
     Room& getRoom(int x, int y);
-
-    // Prints the grid — shows "P" at the player's position, "." elsewhere
     void displayMap(const Player& player) const;
 
 private:
