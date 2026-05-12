@@ -1,4 +1,6 @@
 #include <iostream>
+#include <queue>   // std::priority_queue
+#include <utility> // std::pair
 #include <cstdlib> // rand()
 #include "Room.h"
 
@@ -45,26 +47,31 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory)
         std::cout << "An enemy appears!\n";
         enemy.displayEnemy();
 
-        // ---- Turn queue (FIFO) ----
-        // Push both combatants in order — Player always goes first
-        Queue turnQueue;
-        turnQueue.push("Player");
-        turnQueue.push("Enemy");
+        // ---- Priority queue turn order (Max Heap) ----
+        // pair<int, string>: the int is the priority, string is the name.
+        // std::priority_queue is a MAX heap by default — highest int goes first.
+        // Player priority 10 > Enemy priority 5, so Player always acts first.
+        std::priority_queue<std::pair<int, std::string>> turnPQ;
 
-        // Process each turn: read the front, print the action, remove it
-        // FIFO guarantees Player → Enemy order every time
-        std::cout << "--- Turn Order ---\n";
-        while (!turnQueue.isEmpty()) {
-            std::string turn = turnQueue.front(); // peek at who goes next
-            turnQueue.pop();                      // remove them from the queue
+        turnPQ.push({10, "Player"}); // higher number = higher priority
+        turnPQ.push({5,  "Enemy"});  // lower number = goes second
 
-            if (turn == "Player") {
-                std::cout << "Player attacks!\n";
+        std::cout << "--- Priority Turn Order ---\n";
+        while (!turnPQ.empty()) {
+            // top() returns the pair with the highest priority
+            std::pair<int, std::string> current = turnPQ.top();
+            turnPQ.pop(); // remove it from the heap
+
+            std::string name = current.second;
+
+            if (name == "Player") {
+                std::cout << "Player attacks! (priority " << current.first << ")\n";
             } else {
-                std::cout << enemy.getName() << " attacks!\n";
+                std::cout << enemy.getName() << " attacks! (priority "
+                          << current.first << ")\n";
             }
         }
-        std::cout << "------------------\n";
+        std::cout << "---------------------------\n";
 
     } else if (type == ITEM) {
         if (!items.empty()) {
