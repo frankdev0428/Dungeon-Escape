@@ -11,6 +11,7 @@
 #include "InventoryBST.h"
 #include "Enemy.h"
 #include "Sorter.h"
+#include "Pathfinder.h"
 
 int main() {
     // ---- Sort test ----
@@ -103,6 +104,11 @@ int main() {
         map.displayMap(player);
 
         std::cout << "Position: (" << player.getX() << ", " << player.getY() << ")\n";
+
+        // Run Dijkstra from the player's current position to the exit (4,4)
+        int steps = findShortestPath(player.getX(), player.getY());
+        std::cout << "Shortest path to exit: " << steps << " steps\n";
+
         std::cout << "Enter command: ";
 
         std::string input;
