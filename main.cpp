@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "ItemLoader.h"
 #include "HashTable.h"
+#include "InventoryBST.h"
 
 int main() {
     // ---- Load items from file ----
@@ -50,6 +51,20 @@ int main() {
 
     Map map;
     Player player; // starts at (0, 0)
+
+    // ---- BST test ----
+    // Insert a few items in a deliberate order to show the tree structure:
+    //   value 15 goes in first (becomes root)
+    //   value 8  is smaller  → goes left
+    //   value 30 is larger   → goes right
+    //   value 10 is smaller than 15, larger than 8 → goes right of 8
+    InventoryBST bst;
+    bst.insertItem(Item("Sword",         15));
+    bst.insertItem(Item("Iron_Boots",     8));
+    bst.insertItem(Item("Health_Potion", 30));
+    bst.insertItem(Item("Shield",        10));
+
+    std::cout << "\n"; // spacing before game starts
 
     // Trigger the starting room immediately — player spawns here
     map.getRoom(player.getX(), player.getY()).triggerEvent(items);
