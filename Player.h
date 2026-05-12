@@ -10,6 +10,9 @@ public:
     int getX() const;
     int getY() const;
 
+    // Directly set position — used by the undo system to restore a saved spot
+    void setPosition(int newX, int newY);
+
     // Movement — each checks bounds before moving
     void moveNorth(); // up    (decrease y)
     void moveSouth(); // down  (increase y)

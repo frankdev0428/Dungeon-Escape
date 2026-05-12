@@ -12,6 +12,7 @@
 #include "Enemy.h"
 #include "Sorter.h"
 #include "Pathfinder.h"
+#include "Stack.h"
 
 int main() {
     // ---- Dijkstra test ----
@@ -118,21 +119,21 @@ int main() {
     srand(time(0));
 
     Map map;
-    Player player;       // starts at (0, 0)
-    InventoryBST inventory; // player's inventory — grows as items are picked up
+    Player player;          // starts at (0, 0)
+    InventoryBST inventory; // grows as items are picked up
+    Stack moveStack;        // remembers previous positions for undo
 
     // Trigger the starting room (inventory passed so ITEM rooms can insert)
     map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory);
 
     std::cout << "=== Dungeon Escape ===\n";
-    std::cout << "W/S/A/D = move  |  I = inventory  |  Q = quit\n";
+    std::cout << "W/S/A/D = move  |  U = undo  |  I = inventory  |  Q = quit\n";
 
     while (true) {
         map.displayMap(player);
 
         std::cout << "Position: (" << player.getX() << ", " << player.getY() << ")\n";
 
-        // Run Dijkstra from the player's current position to the exit (4,4)
         int steps = findShortestPath(player.getX(), player.getY());
         std::cout << "Shortest path to exit: " << steps << " steps\n";
 
@@ -142,21 +143,35 @@ int main() {
         std::cin >> input;
         char command = toupper(input[0]);
 
+        if (command == 'U') {
+            // Undo: restore the position saved before the last move
+            if (moveStack.isEmpty()) {
+                std::cout << "Nothing to undo.\n";
+            } else {
+                int prevX = moveStack.topX();
+                int prevY = moveStack.topY();
+                moveStack.pop();
+                player.setPosition(prevX, prevY);
+                std::cout << "Undo move!\n";
+            }
+            continue; // skip triggerEvent — no new room entered
+        }
+
+        if      (command == 'I') { inventory.displayInventory(); continue; }
+        else if (command == 'Q') { std::cout << "Thanks for playing. Goodbye!\n"; break; }
+        else if (command != 'W' && command != 'S' &&
+                 command != 'A' && command != 'D') {
+            std::cout << "Unknown command. Use W/A/S/D, U, I, or Q.\n";
+            continue;
+        }
+
+        // Save current position BEFORE moving so U can restore it
+        moveStack.push(player.getX(), player.getY());
+
         if      (command == 'W') player.moveNorth();
         else if (command == 'S') player.moveSouth();
         else if (command == 'A') player.moveWest();
         else if (command == 'D') player.moveEast();
-        else if (command == 'I') {
-            // Show everything the player has collected so far (sorted by value)
-            inventory.displayInventory();
-            continue; // no movement — skip triggerEvent
-        } else if (command == 'Q') {
-            std::cout << "Thanks for playing. Goodbye!\n";
-            break;
-        } else {
-            std::cout << "Unknown command. Use W/A/S/D to move, I for inventory, Q to quit.\n";
-            continue;
-        }
 
         // Fire the new room's event — inserts item into inventory if ITEM room
         Room& currentRoom = map.getRoom(player.getX(), player.getY());

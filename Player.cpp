@@ -10,6 +10,11 @@ Player::Player() {
 int Player::getX() const { return x; }
 int Player::getY() const { return y; }
 
+void Player::setPosition(int newX, int newY) {
+    x = newX;
+    y = newY;
+}
+
 void Player::moveNorth() {
     if (y > 0) y--;
 }
