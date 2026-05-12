@@ -48,27 +48,50 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
         std::cout << "   ";
         enemy.displayEnemy();
 
-        std::priority_queue<std::pair<int, std::string>> turnPQ;
-        turnPQ.push({10, "Player"});
-        turnPQ.push({5,  "Enemy"});
+        const int PLAYER_ATTACK = 10; // fixed damage per attack
 
-        std::cout << "-- Turn Order --\n";
-        while (!turnPQ.empty()) {
-            std::pair<int, std::string> current = turnPQ.top();
-            turnPQ.pop();
+        // ---- Combat loop ----
+        // Runs until the enemy is defeated, the player dies, or the player runs.
+        while (enemy.isAlive() && player.getHealth() > 0) {
 
-            if (current.second == "Player") {
-                std::cout << "   You attack first!\n";
-            } else {
-                // Enemy deals damage to the player
+            std::cout << "------------------------------\n";
+            std::cout << "  Your HP : " << player.getHealth()
+                      << "   " << enemy.getName() << " HP : " << enemy.getHealth() << "\n";
+            std::cout << "  1. Attack   2. Run\n";
+            std::cout << "  > ";
+
+            int choice;
+            std::cin >> choice;
+
+            if (choice == 1) {
+                // Player attacks enemy
+                enemy.takeDamage(PLAYER_ATTACK);
+                std::cout << "  You deal " << PLAYER_ATTACK << " damage."
+                          << " " << enemy.getName() << " HP: " << enemy.getHealth() << "\n";
+
+                if (!enemy.isAlive()) {
+                    std::cout << "  " << enemy.getName() << " defeated!\n";
+                    break; // enemy is dead — exit combat
+                }
+
+                // Enemy counter-attacks
                 int dmg = enemy.getAttack();
                 player.takeDamage(dmg);
-                std::cout << "   " << enemy.getName() << " attacks! "
-                          << "You lose " << dmg << " HP."
-                          << " (HP remaining: " << player.getHealth() << ")\n";
+                std::cout << "  " << enemy.getName() << " attacks!"
+                          << " You lose " << dmg << " HP."
+                          << " Your HP: " << player.getHealth() << "\n";
+
+            } else {
+                // Player chose to run — exit combat immediately
+                std::cout << "  You fled from the " << enemy.getName() << "!\n";
+                break;
             }
         }
-        std::cout << "----------------\n";
+
+        if (player.getHealth() <= 0) {
+            std::cout << "  You were defeated by the " << enemy.getName() << "...\n";
+        }
+        std::cout << "------------------------------\n";
 
     } else if (type == ITEM) {
         if (!items.empty()) {
