@@ -10,10 +10,12 @@ public:
     int getX()      const;
     int getY()      const;
     int getHealth() const;
+    int getAttack() const;
 
-    void setPosition(int newX, int newY); // used by undo to restore position
-    void takeDamage(int dmg);             // reduce health; clamps at 0
-    void heal(int amount);                // restore health; caps at 100
+    void setPosition(int newX, int newY);   // used by undo to restore position
+    void takeDamage(int dmg);               // reduce health; clamps at 0
+    void heal(int amount);                  // restore health; caps at 100
+    void increaseAttack(int amount);        // grow attack after defeating an enemy
 
     // Movement — each checks bounds before moving
     void moveNorth(); // up    (decrease y)
@@ -25,6 +27,7 @@ private:
     int x;
     int y;
     int health; // starts at 100
+    int attack; // starts at 10, grows when enemies are defeated
 };
 
 #endif

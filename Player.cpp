@@ -6,11 +6,13 @@ Player::Player() {
     x      = 0;
     y      = 0;
     health = 100;
+    attack = 10;
 }
 
 int Player::getX()      const { return x;      }
 int Player::getY()      const { return y;      }
 int Player::getHealth() const { return health; }
+int Player::getAttack() const { return attack; }
 
 void Player::setPosition(int newX, int newY) {
     x = newX;
@@ -25,6 +27,10 @@ void Player::takeDamage(int dmg) {
 void Player::heal(int amount) {
     health += amount;
     if (health > 100) health = 100;
+}
+
+void Player::increaseAttack(int amount) {
+    attack += amount;
 }
 
 void Player::moveNorth() {

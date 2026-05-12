@@ -16,6 +16,7 @@ void printHUD(const Player& player, int stepsToExit) {
     std::cout << THIN << "\n";
     std::cout << " Position : (" << player.getX() << ", " << player.getY() << ")"
               << "   HP : " << player.getHealth()
+              << "   ATK : " << player.getAttack()
               << "   Steps to exit : " << stepsToExit << "\n";
     std::cout << THIN << "\n";
 }

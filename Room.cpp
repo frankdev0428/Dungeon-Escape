@@ -48,14 +48,13 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
         std::cout << "   ";
         enemy.displayEnemy();
 
-        const int PLAYER_ATTACK = 10; // fixed damage per attack
-
         // ---- Combat loop ----
         // Runs until the enemy is defeated, the player dies, or the player runs.
         while (enemy.isAlive() && player.getHealth() > 0) {
 
             std::cout << "------------------------------\n";
             std::cout << "  Your HP : " << player.getHealth()
+                      << "  ATK : " << player.getAttack()
                       << "   " << enemy.getName() << " HP : " << enemy.getHealth() << "\n";
             std::cout << "  1. Attack   2. Run\n";
             std::cout << "  > ";
@@ -64,14 +63,19 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
             std::cin >> choice;
 
             if (choice == 1) {
-                // Player attacks enemy
-                enemy.takeDamage(PLAYER_ATTACK);
-                std::cout << "  You deal " << PLAYER_ATTACK << " damage."
+                // Player attacks using their current attack stat
+                int dmgDealt = player.getAttack();
+                enemy.takeDamage(dmgDealt);
+                std::cout << "  You deal " << dmgDealt << " damage."
                           << " " << enemy.getName() << " HP: " << enemy.getHealth() << "\n";
 
                 if (!enemy.isAlive()) {
                     std::cout << "  " << enemy.getName() << " defeated!\n";
-                    break; // enemy is dead — exit combat
+                    // Reward: increase player attack on every kill
+                    player.increaseAttack(2);
+                    std::cout << "  You feel stronger! Attack increased to "
+                              << player.getAttack() << ".\n";
+                    break;
                 }
 
                 // Enemy counter-attacks — 20% chance of dealing double damage
