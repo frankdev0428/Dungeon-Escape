@@ -64,7 +64,11 @@ int main() {
     bst.insertItem(Item("Health_Potion", 30));
     bst.insertItem(Item("Shield",        10));
 
-    std::cout << "\n"; // spacing before game starts
+    // Display inventory in sorted order to verify the BST is ordered correctly
+    // Expected order by value: Iron_Boots(8), Shield(10), Sword(15), Health_Potion(30)
+    std::cout << "\n";
+    bst.displayInventory();
+    std::cout << "\n";
 
     // Trigger the starting room immediately — player spawns here
     map.getRoom(player.getX(), player.getY()).triggerEvent(items);

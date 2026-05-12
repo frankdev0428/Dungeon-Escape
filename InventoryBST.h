@@ -12,14 +12,15 @@ struct Node {
 
 class InventoryBST {
 public:
-    InventoryBST();           // sets root to nullptr (empty tree)
-    void insertItem(const Item& item); // public entry point for inserting
+    InventoryBST();
+    void insertItem(const Item& item);  // public entry point for inserting
+    void displayInventory() const;      // prints all items sorted by value
 
 private:
-    Node* root; // the top of the tree; nullptr when empty
+    Node* root;
 
-    // Recursive helper — returns the (possibly new) node at this position
-    Node* insert(Node* node, const Item& item);
+    Node* insert(Node* node, const Item& item); // recursive insert helper
+    void  inOrder(Node* node) const;            // recursive traversal helper
 };
 
 #endif

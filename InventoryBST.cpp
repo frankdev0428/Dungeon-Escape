@@ -39,3 +39,24 @@ Node* InventoryBST::insert(Node* node, const Item& item) {
     // Return the unchanged current node so the parent's pointer stays valid
     return node;
 }
+
+// Public — starts the traversal from the root
+void InventoryBST::displayInventory() const {
+    std::cout << "--- Inventory (sorted by value) ---\n";
+    inOrder(root);
+    std::cout << "-----------------------------------\n";
+}
+
+// Private recursive helper.
+// In-order = left subtree first, then current node, then right subtree.
+// Because smaller values go left and larger go right, this prints
+// items from lowest value to highest automatically.
+void InventoryBST::inOrder(Node* node) const {
+    // Base case: empty spot — nothing to print, just return
+    if (node == nullptr) return;
+
+    inOrder(node->left);                              // 1. visit left subtree
+    std::cout << node->data.getName()                 // 2. print this node
+              << " (Value: " << node->data.getValue() << ")\n";
+    inOrder(node->right);                             // 3. visit right subtree
+}
