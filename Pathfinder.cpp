@@ -7,9 +7,9 @@
 const int DX[] = { 1, -1,  0, 0 };
 const int DY[] = { 0,  0,  1, -1 };
 
-int findShortestPath(int startX, int startY, int gridRows, int gridCols) {
-    const int EXIT_X = gridCols - 1;
-    const int EXIT_Y = gridRows - 1;
+int findShortestPath(int startX, int startY, int gridRows, int gridCols, int exitX, int exitY) {
+    const int EXIT_X = exitX;
+    const int EXIT_Y = exitY;
 
     // Use a 2D vector so size is determined at runtime
     std::vector<std::vector<int>> dist(gridRows,

@@ -15,10 +15,18 @@ Map::Map(int r, int c) {
             else                grid[row][col].setType(ITEM);
         }
     }
+
+    // Random exit — anywhere except the starting cell (0,0)
+    do {
+        exitX = rand() % cols;
+        exitY = rand() % rows;
+    } while (exitX == 0 && exitY == 0);
 }
 
-int Map::getRows() const { return rows; }
-int Map::getCols() const { return cols; }
+int Map::getRows()  const { return rows;  }
+int Map::getCols()  const { return cols;  }
+int Map::getExitX() const { return exitX; }
+int Map::getExitY() const { return exitY; }
 
 Room& Map::getRoom(int x, int y) {
     return grid[y][x];

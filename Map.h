@@ -7,11 +7,12 @@
 
 class Map {
 public:
-    // Constructor: builds and randomly fills an r x c grid
     Map(int r, int c);
 
-    int getRows() const;
-    int getCols() const;
+    int getRows()  const;
+    int getCols()  const;
+    int getExitX() const;
+    int getExitY() const;
 
     Room& getRoom(int x, int y);
     void displayMap(const Player& player) const;
@@ -19,7 +20,9 @@ public:
 private:
     int rows;
     int cols;
-    std::vector<std::vector<Room>> grid; // grid[row][col]
+    int exitX;
+    int exitY;
+    std::vector<std::vector<Room>> grid;
 };
 
 #endif

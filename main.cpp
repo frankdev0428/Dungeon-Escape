@@ -14,19 +14,19 @@
 #include "Pathfinder.h"
 #include "Stack.h"
 #include "UI.h"
+#include "Colors.h"
 
 int main() {
     srand(time(0));
 
-    // Load items from file and index them in the hash table
     std::vector<Item> items = loadItemsFromFile("items.txt");
     HashTable ht(10);
     for (int i = 0; i < items.size(); i++) {
         ht.insert(items[i]);
     }
 
-    const int MAP_ROWS = 5; // change here to resize the whole dungeon
-    const int MAP_COLS = 5;
+    const int MAP_ROWS = 8; // change here to resize the whole dungeon
+    const int MAP_COLS = 8;
 
     Map map(MAP_ROWS, MAP_COLS);
     Player player(MAP_ROWS, MAP_COLS);
@@ -35,11 +35,10 @@ int main() {
 
     printTitle();
 
-    // Trigger the starting room so the player sees an event on the first turn
     map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
 
     while (true) {
-        int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols());
+        int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
         printHUD(player, steps);
         printMap(map, player);
         printMenu();
@@ -78,25 +77,26 @@ int main() {
 
         map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
 
-        // Game over — player ran out of health
+        // Game over
         if (player.getHealth() <= 0) {
-            printHUD(player, findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols()));
+            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
+            printHUD(player, steps);
             printMap(map, player);
-            std::cout << "==============================\n";
+            std::cout << BOLD_RED << "==============================\n";
             std::cout << "        GAME  OVER            \n";
             std::cout << "  You were defeated...        \n";
-            std::cout << "==============================\n\n";
+            std::cout << "==============================" << RESET << "\n\n";
             break;
         }
 
-        // Win condition — player reached the exit at (4,4)
-        if (player.getX() == map.getCols() - 1 && player.getY() == map.getRows() - 1) {
-            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols());
+        // Win condition — player reached the random exit
+        if (player.getX() == map.getExitX() && player.getY() == map.getExitY()) {
+            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
             printHUD(player, steps);
             printMap(map, player);
-            std::cout << "==============================\n";
+            std::cout << BOLD_GREEN << "==============================\n";
             std::cout << "   You escaped the dungeon!   \n";
-            std::cout << "==============================\n\n";
+            std::cout << "==============================" << RESET << "\n\n";
             break;
         }
     }

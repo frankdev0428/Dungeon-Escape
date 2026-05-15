@@ -1,8 +1,9 @@
 #include <iostream>
-#include <queue>   // std::priority_queue
-#include <utility> // std::pair
-#include <cstdlib> // rand()
+#include <queue>
+#include <utility>
+#include <cstdlib>
 #include "Room.h"
+#include "Colors.h"
 
 // Start every room as empty and unvisited
 Room::Room() {
@@ -37,14 +38,17 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
         std::cout << ">> This room is empty. Nothing of interest here.\n";
 
     } else if (type == ENEMY) {
+        int difficulty = player.getX() + player.getY();
         int roll = rand() % 3;
         Enemy enemy("Unknown", 0, 0);
 
-        if (roll == 0) enemy = Enemy("Goblin",   20, 5);
-        else if (roll == 1) enemy = Enemy("Orc",  30, 8);
-        else                enemy = Enemy("Skeleton", 15, 4);
+        if (roll == 0) enemy = Enemy("Goblin",   20, 12 + difficulty);
+        else if (roll == 1) enemy = Enemy("Orc",  30, 18 + difficulty);
+        else                enemy = Enemy("Skeleton", 15, 10 + difficulty);
 
-        std::cout << "** An enemy blocks your path! **\n";
+        if (difficulty > 0)
+            std::cout << YELLOW << "  Enemy looks stronger..." << RESET << "\n";
+        std::cout << RED << "** An enemy blocks your path! **" << RESET << "\n";
         std::cout << "   ";
         enemy.displayEnemy();
 
@@ -73,24 +77,23 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
                           << " " << enemy.getName() << " HP: " << enemy.getHealth() << "\n";
 
                 if (!enemy.isAlive()) {
-                    std::cout << "  " << enemy.getName() << " defeated!\n";
-                    // Reward: increase player attack on every kill
+                    std::cout << GREEN << "  " << enemy.getName() << " defeated!" << RESET << "\n";
                     player.increaseAttack(2);
-                    std::cout << "  You feel stronger! Attack increased to "
-                              << player.getAttack() << ".\n";
+                    std::cout << GREEN << "  You feel stronger! Attack increased to "
+                              << player.getAttack() << "." << RESET << "\n";
                     break;
                 }
 
                 // Enemy counter-attacks — 20% chance of dealing double damage
                 int dmg = enemy.getAttack();
-                if (rand() % 5 == 0) {          // 1-in-5 = 20%
+                if (rand() % 5 == 0) {
                     dmg *= 2;
-                    std::cout << "  ** Critical hit! **\n";
+                    std::cout << BOLD_RED << "  ** Critical hit! **" << RESET << "\n";
                 }
                 player.takeDamage(dmg);
-                std::cout << "  " << enemy.getName() << " attacks!"
+                std::cout << RED << "  " << enemy.getName() << " attacks!"
                           << " You lose " << dmg << " HP."
-                          << " Your HP: " << player.getHealth() << "\n";
+                          << " Your HP: " << player.getHealth() << RESET << "\n";
 
             } else if (choice == 2) {
                 std::cout << "  You fled from the " << enemy.getName() << "!\n";
@@ -109,16 +112,26 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
         if (!items.empty()) {
             int index = rand() % items.size();
             const Item& found = items[index];
-            std::cout << ">> You found: " << found.getName()
-                      << " (Value: " << found.getValue() << ")"
-                      << " -- added to inventory.\n";
+            const std::string& name = found.getName();
+
+            std::cout << ">> You found: " << name
+                      << " (Value: " << found.getValue() << ")\n";
             inventory.insertItem(found);
 
-            // 20% chance to also restore 20 HP
-            if (rand() % 5 == 0) {
-                player.heal(20);
-                std::cout << ">> Lucky find! You feel restored. +20 HP"
-                          << " (HP: " << player.getHealth() << ")\n";
+            if (name == "Potion") {
+                player.heal(15);
+                std::cout << GREEN << ">> You used Potion! +15 HP"
+                          << " (HP: " << player.getHealth() << ")" << RESET << "\n";
+            } else if (name == "Sword") {
+                player.increaseAttack(5);
+                std::cout << GREEN << ">> Attack increased!"
+                          << " (ATK: " << player.getAttack() << ")" << RESET << "\n";
+            } else if (name == "Axe") {
+                player.increaseAttack(8);
+                std::cout << GREEN << ">> Axe equipped! Attack increased!"
+                          << " (ATK: " << player.getAttack() << ")" << RESET << "\n";
+            } else {
+                std::cout << GREEN << ">> You pocket the " << name << "." << RESET << "\n";
             }
         } else {
             std::cout << ">> This room once had an item, but it is gone.\n";
