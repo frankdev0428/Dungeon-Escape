@@ -1,7 +1,7 @@
 #include <iostream>
-#include "UI.h"
-#include "Colors.h"
-#include "Utils.h"
+#include "Display.h"
+#include "../utils/Colors.h"
+#include "../utils/Helpers.h"
 
 static const std::string THICK = "==============================";
 static const std::string THIN  = "------------------------------";
@@ -32,15 +32,14 @@ void printMap(const Map& map, const Player& player) {
     for (int row = 0; row < map.getRows(); row++) {
         std::cout << "  ";
         for (int col = 0; col < map.getCols(); col++) {
-            if (row == player.getY() && col == player.getX()) {
+            if (row == player.getY() && col == player.getX())
                 std::cout << BOLD_GREEN << "P " << RESET;
-            } else if (row == EXIT_Y && col == EXIT_X) {
+            else if (row == EXIT_Y && col == EXIT_X)
                 std::cout << BOLD_CYAN << "E " << RESET;
-            } else if (map.getRoom(col, row).isVisited()) {
+            else if (map.getRoom(col, row).isVisited())
                 std::cout << YELLOW << "* " << RESET;
-            } else {
+            else
                 std::cout << ". ";
-            }
         }
         std::cout << "\n";
     }

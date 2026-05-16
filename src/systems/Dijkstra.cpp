@@ -2,7 +2,7 @@
 #include <vector>
 #include <queue>    // priority_queue
 #include <climits>  // INT_MAX
-#include "Pathfinder.h"
+#include "Dijkstra.h"
 
 const int DX[] = { 1, -1,  0, 0 };
 const int DY[] = { 0,  0,  1, -1 };

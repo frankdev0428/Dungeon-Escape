@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "Item.h"
+#include "../core/Item.h"
 
 // Reads items from a text file and returns them as a vector.
 // Each line must be in the format:  name value

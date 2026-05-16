@@ -3,11 +3,9 @@
 #include <utility>
 #include <cstdlib>
 #include "Room.h"
-#include "Colors.h"
-#include "Utils.h"
+#include "../utils/Colors.h"
+#include "../utils/Helpers.h"
 
-// hasBufferedNewline: true when a std::cin >> was done just before this call
-// (ENEMY combat), false when no prior read exists (ITEM rooms).
 static void pressEnter(bool hasBufferedNewline) {
     if (hasBufferedNewline)
         std::cin.ignore(1000, '\n');
@@ -25,7 +23,7 @@ RoomType Room::getType()  const { return type; }
 bool Room::isVisited()    const { return visited; }
 void Room::setVisited(bool v)   { visited = v; }
 
-void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory, Player& player) {
+void Room::triggerEvent(const std::vector<Item>& items, BST& inventory, Player& player) {
     if (visited) return;
 
     if (type == EMPTY) {
@@ -101,13 +99,13 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
             std::cout << RED << "  You were defeated by the " << enemy.getName() << "..." << RESET << "\n";
 
         std::cout << "------------------------------\n";
-        pressEnter(combatInputDone); // only ignore buffer if we actually read from cin
+        pressEnter(combatInputDone);
 
     } else if (type == ITEM) {
         std::cout << ">> Something glimmers in the corner...\n";
 
         if (!items.empty()) {
-            int index = rand() % items.size();
+            int index = rand() % (int)items.size();
             const Item& found = items[index];
             const std::string& name = found.getName();
 
@@ -123,7 +121,7 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
                 std::cout << GREEN << ">> Attack increased! (ATK: " << player.getAttack() << ")" << RESET << "\n";
             } else if (name == "Axe") {
                 player.increaseAttack(8);
-                std::cout << GREEN << ">> Axe equipped! Attack increased! (ATK: " << player.getAttack() << ")" << RESET << "\n";
+                std::cout << GREEN << ">> Axe equipped! (ATK: " << player.getAttack() << ")" << RESET << "\n";
             } else {
                 std::cout << GREEN << ">> You pocket the " << name << "." << RESET << "\n";
             }
@@ -131,7 +129,7 @@ void Room::triggerEvent(const std::vector<Item>& items, InventoryBST& inventory,
             std::cout << ">> This room once had an item, but it is gone.\n";
         }
 
-        pressEnter(false); // no prior cin >> in item rooms
+        pressEnter(false);
     }
 
     visited = true;

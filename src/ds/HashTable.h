@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "Item.h"
+#include "../core/Item.h"
 
 // A hash table that stores Items using chaining.
 // "Chaining" means each bucket is a list — if two items hash to the

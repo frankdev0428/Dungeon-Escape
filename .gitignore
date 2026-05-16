@@ -1,0 +1,11 @@
+# Compiled binaries
+game
+dungeon
+
+# Build artifacts
+build/
+*.o
+*.out
+
+# macOS system files
+.DS_Store
