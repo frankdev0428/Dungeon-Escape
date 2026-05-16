@@ -13,14 +13,19 @@ struct Node {
 class InventoryBST {
 public:
     InventoryBST();
-    void insertItem(const Item& item);  // public entry point for inserting
-    void displayInventory() const;      // prints all items sorted by value
+    ~InventoryBST();
+    InventoryBST(const InventoryBST&)            = delete;
+    InventoryBST& operator=(const InventoryBST&) = delete;
+
+    void insertItem(const Item& item);
+    void displayInventory() const;
 
 private:
     Node* root;
 
-    Node* insert(Node* node, const Item& item); // recursive insert helper
-    void  inOrder(Node* node) const;            // recursive traversal helper
+    Node* insert(Node* node, const Item& item);
+    void  inOrder(Node* node) const;
+    void  deleteTree(Node* node);
 };
 
 #endif

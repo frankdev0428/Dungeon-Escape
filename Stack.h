@@ -11,8 +11,10 @@ struct SNode {
 // LIFO Stack — last position pushed is the first one popped (undo order)
 class Stack {
 public:
-    Stack();   // start with an empty stack
-    ~Stack();  // free all remaining nodes
+    Stack();
+    ~Stack();
+    Stack(const Stack&)            = delete;
+    Stack& operator=(const Stack&) = delete;
 
     void push(int x, int y);  // save a position on top
     void pop();               // remove the top position

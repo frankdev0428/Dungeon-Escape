@@ -8,7 +8,7 @@ Item::Item() {
 }
 
 // Build an item with a specific name and value
-Item::Item(std::string name, int value) {
+Item::Item(const std::string& name, int value) {
     this->name  = name;  // "this->" distinguishes the member from the parameter
     this->value = value;
 }

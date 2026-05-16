@@ -12,8 +12,10 @@ struct QNode {
 // FIFO Queue — first item pushed is the first item popped
 class Queue {
 public:
-    Queue();   // start with an empty queue
-    ~Queue();  // free all remaining nodes
+    Queue();
+    ~Queue();
+    Queue(const Queue&)            = delete;
+    Queue& operator=(const Queue&) = delete;
 
     void push(const std::string& value); // add to the back
     void pop();                          // remove from the front

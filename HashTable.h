@@ -16,8 +16,8 @@ public:
     // Insert an item (uses item.getName() as the key)
     void insert(const Item& item);
 
-    // Search by name — returns a pointer to the Item if found, nullptr if not
-    Item* search(const std::string& name);
+    // Search by name — returns a copy of the Item if found, or Item() if not
+    Item search(const std::string& name) const;
 
     // Print every bucket and every item inside it (useful for testing)
     void display() const;

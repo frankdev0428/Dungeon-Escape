@@ -9,7 +9,7 @@ public:
     Item();
 
     // Parameterized constructor — create a real item with a name and value
-    Item(std::string name, int value);
+    Item(const std::string& name, int value);
 
     std::string getName()  const; // returns the item's name
     int         getValue() const; // returns the item's power/value

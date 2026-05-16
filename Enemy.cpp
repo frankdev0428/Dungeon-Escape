@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Enemy.h"
 
-Enemy::Enemy(std::string name, int health, int attack) {
+Enemy::Enemy(const std::string& name, int health, int attack) {
     this->name   = name;
     this->health = health;
     this->attack = attack;

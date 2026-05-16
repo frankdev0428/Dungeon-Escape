@@ -1,6 +1,7 @@
 #include <iostream>
 #include "UI.h"
 #include "Colors.h"
+#include "Utils.h"
 
 static const std::string THICK = "==============================";
 static const std::string THIN  = "------------------------------";
@@ -11,12 +12,16 @@ void printTitle() {
     std::cout << BOLD_CYAN << THICK << RESET << "\n";
 }
 
-void printHUD(const Player& player, int stepsToExit) {
+void printHUD(const Player& player, int stepsToExit, int roomsVisited, int totalRooms) {
     std::cout << CYAN << THIN << RESET << "\n";
-    std::cout << " Position : (" << player.getX() << ", " << player.getY() << ")"
-              << "   HP : " << GREEN << player.getHealth() << RESET
-              << "   ATK : " << YELLOW << player.getAttack() << RESET
-              << "   Steps to exit : " << stepsToExit << "\n";
+    std::cout << " Pos:(" << player.getX() << "," << player.getY() << ")  ";
+    std::cout << "HP:";
+    printBar(player.getHealth(), 100);
+    std::cout << "  " << YELLOW << "ATK:" << player.getAttack() << RESET;
+    std::cout << "  Steps:";
+    if (stepsToExit < 0) std::cout << "?";
+    else                 std::cout << stepsToExit;
+    std::cout << "  Rooms:" << GREEN << roomsVisited << "/" << totalRooms << RESET << "\n";
     std::cout << CYAN << THIN << RESET << "\n";
 }
 
@@ -31,6 +36,8 @@ void printMap(const Map& map, const Player& player) {
                 std::cout << BOLD_GREEN << "P " << RESET;
             } else if (row == EXIT_Y && col == EXIT_X) {
                 std::cout << BOLD_CYAN << "E " << RESET;
+            } else if (map.getRoom(col, row).isVisited()) {
+                std::cout << YELLOW << "* " << RESET;
             } else {
                 std::cout << ". ";
             }

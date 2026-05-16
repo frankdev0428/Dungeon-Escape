@@ -14,7 +14,9 @@ public:
     int getExitX() const;
     int getExitY() const;
 
-    Room& getRoom(int x, int y);
+    Room&       getRoom(int x, int y);
+    const Room& getRoom(int x, int y) const;
+    int         countVisited() const;
     void displayMap(const Player& player) const;
 
 private:

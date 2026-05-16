@@ -6,7 +6,7 @@
 class Enemy {
 public:
     // Build an enemy with a name, health pool, and attack power
-    Enemy(std::string name, int health, int attack);
+    Enemy(const std::string& name, int health, int attack);
 
     std::string getName()   const;
     int         getHealth() const;

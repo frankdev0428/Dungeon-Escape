@@ -21,84 +21,111 @@ int main() {
 
     std::vector<Item> items = loadItemsFromFile("items.txt");
     HashTable ht(10);
-    for (int i = 0; i < items.size(); i++) {
+    for (int i = 0; i < (int)items.size(); i++) {
         ht.insert(items[i]);
     }
 
-    const int MAP_ROWS = 8; // change here to resize the whole dungeon
-    const int MAP_COLS = 8;
-
-    Map map(MAP_ROWS, MAP_COLS);
-    Player player(MAP_ROWS, MAP_COLS);
-    InventoryBST inventory;
-    Stack moveStack;
+    const int MAP_ROWS   = 8;
+    const int MAP_COLS   = 8;
+    const int TOTAL_ROOMS = MAP_ROWS * MAP_COLS;
 
     printTitle();
 
-    map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
+    while (true) {  // play-again loop
+        Map map(MAP_ROWS, MAP_COLS);
+        Player player(MAP_ROWS, MAP_COLS);
+        InventoryBST inventory;
+        Stack moveStack;
 
-    while (true) {
-        int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
-        printHUD(player, steps);
-        printMap(map, player);
-        printMenu();
+        while (true) {  // game loop
+            // 1. Always render map first
+            std::cout << CLEAR_SCREEN << std::flush;
+            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
+            printHUD(player, steps, map.countVisited(), TOTAL_ROOMS);
+            printMap(map, player);
+            printMenu();
 
-        std::cout << "  > ";
+            // 2. Then trigger the current room's event (visited flag prevents double-firing)
+            map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
 
-        std::string input;
-        std::cin >> input;
-        char command = toupper(input[0]);
-
-        if (command == 'U') {
-            if (moveStack.isEmpty()) {
-                std::cout << "  Nothing to undo.\n";
-            } else {
-                player.setPosition(moveStack.topX(), moveStack.topY());
-                moveStack.pop();
-                std::cout << "  Undo move!\n";
+            // 3. Check end conditions after the event resolves
+            if (player.getHealth() <= 0) {
+                std::cout << CLEAR_SCREEN << std::flush;
+                printHUD(player, 0, map.countVisited(), TOTAL_ROOMS);
+                printMap(map, player);
+                std::cout << BOLD_RED << "==============================\n";
+                std::cout << "        GAME  OVER            \n";
+                std::cout << "  You were defeated...        \n";
+                std::cout << "==============================" << RESET << "\n\n";
+                break;
             }
-            continue;
+
+            if (player.getX() == map.getExitX() && player.getY() == map.getExitY()) {
+                std::cout << CLEAR_SCREEN << std::flush;
+                printHUD(player, 0, map.countVisited(), TOTAL_ROOMS);
+                printMap(map, player);
+                std::cout << BOLD_GREEN << "==============================\n";
+                std::cout << "   You escaped the dungeon!   \n";
+                std::cout << "==============================" << RESET << "\n\n";
+                break;
+            }
+
+            // 4. Read command
+            std::cout << "  > ";
+            std::string input;
+            std::cin >> input;
+            if (input.empty()) continue;
+            char command = toupper(input[0]);
+
+            if (command == 'U') {
+                if (moveStack.isEmpty()) {
+                    std::cout << "  Nothing to undo.\n";
+                } else {
+                    int prevX = moveStack.topX();
+                    int prevY = moveStack.topY();
+                    player.setPosition(prevX, prevY);
+                    moveStack.pop();
+                    std::cout << "  Moved back to (" << prevX << ", " << prevY << ").\n";
+                }
+                continue;
+            }
+
+            if (command == 'I') {
+                inventory.displayInventory();
+                std::cin.ignore(1000, '\n');
+                std::cout << "\n  Press Enter to continue...";
+                std::cin.get();
+                continue;
+            }
+
+            if (command == 'Q') {
+                std::cout << "\n  Thanks for playing. Goodbye!\n\n";
+                return 0;
+            }
+
+            if (command != 'W' && command != 'S' &&
+                command != 'A' && command != 'D') {
+                std::cout << "  Unknown command. Use W/A/S/D, U, I, or Q.\n";
+                continue;
+            }
+
+            // 5. Move
+            moveStack.push(player.getX(), player.getY());
+            if      (command == 'W') player.moveNorth();
+            else if (command == 'S') player.moveSouth();
+            else if (command == 'A') player.moveWest();
+            else if (command == 'D') player.moveEast();
         }
 
-        if      (command == 'I') { inventory.displayInventory(); continue; }
-        else if (command == 'Q') { std::cout << "\n  Thanks for playing. Goodbye!\n\n"; break; }
-        else if (command != 'W' && command != 'S' &&
-                 command != 'A' && command != 'D') {
-            std::cout << "  Unknown command. Use W/A/S/D, U, I, or Q.\n";
-            continue;
-        }
-
-        moveStack.push(player.getX(), player.getY());
-
-        if      (command == 'W') player.moveNorth();
-        else if (command == 'S') player.moveSouth();
-        else if (command == 'A') player.moveWest();
-        else if (command == 'D') player.moveEast();
-
-        map.getRoom(player.getX(), player.getY()).triggerEvent(items, inventory, player);
-
-        // Game over
-        if (player.getHealth() <= 0) {
-            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
-            printHUD(player, steps);
-            printMap(map, player);
-            std::cout << BOLD_RED << "==============================\n";
-            std::cout << "        GAME  OVER            \n";
-            std::cout << "  You were defeated...        \n";
-            std::cout << "==============================" << RESET << "\n\n";
+        std::cout << "  Play again? (Y / N): ";
+        std::string again;
+        std::cin >> again;
+        if (again.empty() || toupper(again[0]) != 'Y') {
+            std::cout << "\n  Thanks for playing. Goodbye!\n\n";
             break;
         }
 
-        // Win condition — player reached the random exit
-        if (player.getX() == map.getExitX() && player.getY() == map.getExitY()) {
-            int steps = findShortestPath(player.getX(), player.getY(), map.getRows(), map.getCols(), map.getExitX(), map.getExitY());
-            printHUD(player, steps);
-            printMap(map, player);
-            std::cout << BOLD_GREEN << "==============================\n";
-            std::cout << "   You escaped the dungeon!   \n";
-            std::cout << "==============================" << RESET << "\n\n";
-            break;
-        }
+        printTitle();
     }
 
     return 0;

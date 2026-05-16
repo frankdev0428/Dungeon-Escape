@@ -21,6 +21,9 @@ Map::Map(int r, int c) {
         exitX = rand() % cols;
         exitY = rand() % rows;
     } while (exitX == 0 && exitY == 0);
+
+    // Exit cell must be empty so no enemy blocks the escape
+    grid[exitY][exitX].setType(EMPTY);
 }
 
 int Map::getRows()  const { return rows;  }
@@ -30,6 +33,18 @@ int Map::getExitY() const { return exitY; }
 
 Room& Map::getRoom(int x, int y) {
     return grid[y][x];
+}
+
+const Room& Map::getRoom(int x, int y) const {
+    return grid[y][x];
+}
+
+int Map::countVisited() const {
+    int count = 0;
+    for (int row = 0; row < rows; row++)
+        for (int col = 0; col < cols; col++)
+            if (grid[row][col].isVisited()) count++;
+    return count;
 }
 
 void Map::displayMap(const Player& player) const {

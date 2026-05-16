@@ -1,9 +1,19 @@
 #include <iostream>
 #include "InventoryBST.h"
 
-// Start with an empty tree
 InventoryBST::InventoryBST() {
     root = nullptr;
+}
+
+InventoryBST::~InventoryBST() {
+    deleteTree(root);
+}
+
+void InventoryBST::deleteTree(Node* node) {
+    if (node == nullptr) return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
 }
 
 // Public function — kicks off the recursive insert from the root

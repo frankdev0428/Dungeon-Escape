@@ -22,7 +22,7 @@ void merge(std::vector<Item>& items, int left, int mid, int right) {
     int k = left;       // index into the original items vector
 
     // Compare front of each half and place the smaller one back
-    while (i < leftHalf.size() && j < rightHalf.size()) {
+    while (i < (int)leftHalf.size() && j < (int)rightHalf.size()) {
         if (leftHalf[i].getValue() <= rightHalf[j].getValue()) {
             items[k] = leftHalf[i];
             i++;
@@ -34,8 +34,8 @@ void merge(std::vector<Item>& items, int left, int mid, int right) {
     }
 
     // Copy any leftover elements from either half
-    while (i < leftHalf.size()) { items[k] = leftHalf[i]; i++; k++; }
-    while (j < rightHalf.size()) { items[k] = rightHalf[j]; j++; k++; }
+    while (i < (int)leftHalf.size()) { items[k] = leftHalf[i]; i++; k++; }
+    while (j < (int)rightHalf.size()) { items[k] = rightHalf[j]; j++; k++; }
 }
 
 // --- Merge Sort (recursive) ---
